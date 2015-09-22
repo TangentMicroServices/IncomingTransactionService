@@ -21,6 +21,10 @@ A service for fielding incoming webhooks
 
         pip install -r requirements.txt
         
+5. Setup db
+
+		python manage.py migrate
+        
 5. Run a local server:
 
         python manage.py runserver
