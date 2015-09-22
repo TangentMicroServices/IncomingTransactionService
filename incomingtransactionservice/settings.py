@@ -36,6 +36,14 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    #3rd party:
+    'rest_framework',
+
+    # custom:
+    'webhook',
+    'mandrill',
+    'ifttt',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -81,3 +89,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# DRF Perms:
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',),
+    'PAGE_SIZE': 10
+}
