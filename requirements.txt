@@ -1,0 +1,14 @@
+django==1.8.4
+gunicorn
+requests
+djangorestframework==3.2
+django-rest-swagger
+django-filter
+
+django-jenkins
+django-extensions
+
+mock
+responses
+ipdb
+ipython
