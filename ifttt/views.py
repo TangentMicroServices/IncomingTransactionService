@@ -20,20 +20,19 @@ class IFTTTViewSet(viewsets.ViewSet):
     def create(self, request):
         data = request.data
 
-        if not data or data is None:
-            return Response({'message': 'ERROR', 'description': 'No data is set'}, status=400)
-
-        #import ipdb;ipdb.set_trace()
-
         icr = IncomingRequest()
         icr.payload = json.dumps(data) # store payload as string
         #Get the User
         if 'user' in request.data:
-            user = request.data['user']
-            icr.user = user
-        icr.source = 'IFTTT'
-        icr.incoming_url = request.get_full_path()
+            icr.user = request.data['user']
+        icr.source = 'IT'
+        icr.incoming_url = request.META.get('HTTP_REFFERER')
         icr.save()
+
+        if not data or data is None:
+            return Response({'message': 'ERROR', 'description': 'No data is set'}, status=400)
+
+
 
         return Response({'message': 'OK', 'data': data}, status=200)
 

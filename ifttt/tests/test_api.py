@@ -1,4 +1,5 @@
 from django.test import TestCase, Client
+from webhook.models import IncomingRequest
 import responses
 
 
@@ -24,6 +25,10 @@ class TestIFTTTViewSetPOST(TestCase):
 
         assert response.status_code == 200, 'Expect 200OK'
 
+        icr_entry = IncomingRequest.objects.get(user=4)
+
+        assert icr_entry is not None, 'Expect the Entry Record to Exist'
+
     def test_create_ifttt_exit(self):
         c = Client()
         response = c.post('/ifttt/', { 	"user": "4",
@@ -33,6 +38,24 @@ class TestIFTTTViewSetPOST(TestCase):
                                           "entered_or_exited": "exited"})
 
         assert response.status_code == 200, 'Expect 200OK'
+
+        icr_entry = IncomingRequest.objects.get(user=4)
+
+        assert icr_entry is not None, 'Expect the Exit Record to Exist'
+
+    # def test_create_ifttt_enter_added(self):
+        # Test that enter was added
+        # now check we can find it in the database again
+        # all_icr_in_database = IncomingRequest.objects.all()
+        # self.assertEquals(len(all_icr_in_database), 1)
+
+
+        # only_poll_in_database = all_polls_in_database[0]
+        # self.assertEquals(only_poll_in_database, poll)
+        #
+        # # and check that it's saved its two attributes: question and pub_date
+        # self.assertEquals(only_poll_in_database.question, "What's up?")
+        # self.assertEquals(only_poll_in_database.pub_date, poll.pub_date)
 
     def test_create_ifttt_empty(self):
         '''

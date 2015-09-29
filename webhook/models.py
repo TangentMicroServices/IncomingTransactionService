@@ -16,4 +16,4 @@ class IncomingRequest(models.Model):
                               default=UNKNOWN)
     incoming_url = models.URLField(blank=True, null=True)
     payload = models.TextField(default='{}')
-    user = models.IntegerField()
+    user = models.IntegerField(default='-1')
