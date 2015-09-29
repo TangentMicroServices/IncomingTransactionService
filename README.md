@@ -76,7 +76,7 @@ Followed by:
 With the following conditions:
 * `entered` and `exited` must occur within 24 hours of each other
 
-#### Setting up the Maker Request
+#### Setting up the Maker Request for Automatic Hours Logging with Location
 
 1. Go to [IfThisThenThat](https://ifttt.com) Website
 or download the [iOS](https://itunes.apple.com/za/app/if-by-ifttt/id660944635?mt=8) or [android](https://play.google.com/store/apps/details?id=com.ifttt.ifttt&hl=en) apps.
