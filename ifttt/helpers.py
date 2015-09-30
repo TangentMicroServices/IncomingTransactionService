@@ -17,6 +17,13 @@ class IfThisThenThatHelpers:
         else:
             return True
 
+    @staticmethod
+    def get_hours(enter_payload, exit_payload):
+        """
+        pass in the two payloads, get the dates, return the hours count
+        """
+        pass
+
     #takes time strings, not objects
     @staticmethod
     def calculate_hours_diff(entered_time, exited_time):

@@ -42,9 +42,12 @@ class IFTTTViewSet(viewsets.ViewSet):
 
             # get the entered time
             #import ipdb; ipdb.set_trace()
-            entered_data = json.loads(entered_icr.payload)
-            time_in = entered_data['time']
-            time_out = data['time']
+            entered_data = entered_icr.payload_as_json
+            exited_data = icr.payload_as_json
+            hours = IfThisThenThatHelpers.get_hours(entered_data, exited_data)
+
+            # time_in = entered_data['time']
+            # time_out = data['time']
             # Validate in Model
             # Valdiate it is longer than 1 hour
 
