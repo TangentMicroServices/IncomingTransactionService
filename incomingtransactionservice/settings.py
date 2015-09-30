@@ -96,3 +96,6 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',),
     'PAGE_SIZE': 10
 }
+
+# April 29, 2013 at 12:01PM
+DATE_FORMAT = "%B %d, %Y at %I:%M%p"
