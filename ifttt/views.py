@@ -33,7 +33,7 @@ class IFTTTViewSet(viewsets.ViewSet):
             return Response({'message': 'ERROR', 'description': 'No data is set'}, status=400)
 
         # If exiting an area find corresponding entry time
-        if data['entered_or_exited'] == "exited":
+        if data.get('entered_or_exited', None) == "exited":
             #if IncomingRequest.objects.filter(user=icr.user).order_by('-id')[1].exists():
                 entered_icr = IncomingRequest.objects.filter(user=icr.user).order_by('-id')[1]
                 if entered_icr is not None:
