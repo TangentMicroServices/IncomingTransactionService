@@ -73,7 +73,7 @@ class HipchatViewSet(viewsets.ViewSet):
         entry = self.getEntryFromPost(request.data)
 
         incoming_request = {
-            'source': 'hipchat',
+            'source': 'HC',
             'incoming_url': request.META.get('HTTP_REFERER'),
             'payload': request.data,
             'user': entry['user']
