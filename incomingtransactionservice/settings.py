@@ -100,3 +100,8 @@ REST_FRAMEWORK = {
 
 # April 29, 2013 at 12:01PM
 DATE_FORMAT = "%B %d, %Y at %I:%M%p"
+
+try:
+    from local_settings import *
+except:
+    print("No Local Settings Defined")

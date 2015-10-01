@@ -7,6 +7,7 @@ from rest_framework import status
 import json
 import requests
 import datetime
+from django.conf import settings
 
 class HipchatViewSet(viewsets.ViewSet):
 
@@ -14,7 +15,7 @@ class HipchatViewSet(viewsets.ViewSet):
         """
         Returns the users email address from hipchat
         """
-        payload = {"format":"json", "user_id": hipchat_user_id, "auth_token": "4efb6a0da2699a6c18be5623f40d08"}
+        payload = {"format":"json", "user_id": hipchat_user_id, "auth_token": settings.HIPCHAT_AUTH_TOKEN}
         url = "https://api.hipchat.com/v1/users/show"
 
         try:
