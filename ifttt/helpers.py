@@ -22,7 +22,15 @@ class IfThisThenThatHelpers:
         """
         pass in the two payloads, get the dates, return the hours count
         """
-        pass
+        entered_date = enter_payload["time"]
+        exited_date = exit_payload["time"]
+
+        hours = IfThisThenThatHelpers.calculate_hours_diff(entered_date, exited_date)
+        if hours in range(1, 24):
+            return hours
+        else:
+            raise Exception("Hours out of Range")
+
 
     #takes time strings, not objects
     @staticmethod
@@ -34,7 +42,7 @@ class IfThisThenThatHelpers:
         seconds = abs(delta.days * 86400) + delta.seconds
         #import pdb;pdb.set_trace()
         hours = round(seconds/3600)
-        
+
         if exited < entered:
             hours=hours*-1
 
