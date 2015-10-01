@@ -85,7 +85,7 @@ class HipchatViewSet(viewsets.ViewSet):
             serializer.save()
 
             entry['day'] = datetime.datetime.now().date().strftime("%Y-%m-%d")
-            entry['status'] = "Submitted"
+            entry['status'] = "Open"
 
             try:
                 headers = {
