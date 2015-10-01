@@ -1,6 +1,7 @@
 import json
 from django.conf import settings
 from datetime import datetime
+from microclient.clients import HoursService
 
 def convert_string_time(str):
     ctime = datetime.strptime(str, settings.DATE_FORMAT )
@@ -9,6 +10,7 @@ def convert_string_time(str):
 
 class IfThisThenThatHelpers:
 
+    @staticmethod
     def is_json(myjson):
         try:
             json_object = json.loads(myjson)
@@ -16,6 +18,25 @@ class IfThisThenThatHelpers:
             return False
         else:
             return True
+
+    @staticmethod
+    def make_hours_post(payload, hours):
+        # initialise the hours service
+        service = HoursService(token=payload["auth_token"])
+        # get date
+        # datetime.datetime.now() won't work because already imported datetime from datetime
+        i = datetime.now()
+        data = {
+            "user": payload["user"],
+            "project_id":payload["project_id"],
+            "project_task_id":payload["project_task_id"],
+            "day": "%s/%s/%s" % (i.year, i.month, i.day),
+            "hours": hours,
+            "comments": "testing"
+        }
+
+        response = service.create(resource="entry", data=data)
+        return response
 
     @staticmethod
     def get_hours(enter_payload, exit_payload):

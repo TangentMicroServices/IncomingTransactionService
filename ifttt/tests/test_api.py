@@ -21,7 +21,8 @@ class TestIFTTTViewSetPOST(TestCase):
                                           "project_id": "2",
                                           "project_task_id": "23",
                                           "time": "October 1, 2015 at 04:34PM",
-                                          "entered_or_exited": "entered"})
+                                          "entered_or_exited": "entered",
+                                          "auth_token" : "Token 4a63ad0347041fc93182c2cfa18bc27cda4f4cd2"})
 
         assert response.status_code == 200, 'Expect 200OK'
 
@@ -35,7 +36,8 @@ class TestIFTTTViewSetPOST(TestCase):
                "project_id": "2",
                "project_task_id": "23",
                "time": "October 1, 2015 at 04:34PM",
-               "entered_or_exited": "entered"}
+               "entered_or_exited": "entered",
+               "auth_token" : "Token 4a63ad0347041fc93182c2cfa18bc27cda4f4cd2"}
 
         IncomingRequest.objects.create(user=4, payload=json.dumps(data))
 
@@ -44,7 +46,8 @@ class TestIFTTTViewSetPOST(TestCase):
                           "project_id": "2",
                           "project_task_id": "23",
                           "time": "October 1, 2015 at 09:34PM",
-                          "entered_or_exited": "exited"
+                          "entered_or_exited": "exited",
+                          "auth_token" : "Token 4a63ad0347041fc93182c2cfa18bc27cda4f4cd2"
                         }
         response = c.post('/ifttt/', exit_payload)
 
@@ -55,7 +58,7 @@ class TestIFTTTViewSetPOST(TestCase):
         assert icr_entry is not None, 'Expect the Exit Record to Exist'
         assert icr_entry.payload_as_json == exit_payload, 'Expect {} to equal {}'. format(icr_entry.payload_as_json, exit_payload)
 
-    
+
 
     def test_create_ifttt_empty(self):
         '''

@@ -12,8 +12,8 @@ class TestIFTTTHelpers(TestCase):
     def test_calculate_difference(self):
         inputs = [
             ("April 29, 2013 at 08:01PM", "April 29, 2013 at 09:01PM", 1),
-            ("April 29, 2013 at 08:0PM", "April 29, 2013 at 08:31PM", 1),
-            ("April 29, 2013 at 08:0PM", "April 29, 2013 at 08:29PM", 0),
+            ("April 29, 2013 at 08:01PM", "April 29, 2013 at 08:31PM", 1),
+            ("April 29, 2013 at 08:01PM", "April 29, 2013 at 08:29PM", 0),
         ]
 
         for entered, exited, expected in inputs:
@@ -43,3 +43,15 @@ class TestIFTTTHelpers(TestCase):
         result = IfThisThenThatHelpers.calculate_hours_diff(enter, exit)
 
         assert result == 0, 'Equals 0 hours'
+
+    def test_hours_service_post(self):
+        data = { "user": "19",
+          "project_id": "43",
+          "project_task_id": "57",
+          "time": "October 1, 2015 at 09:34PM",
+          "entered_or_exited": "exited",
+          "auth_token" : "4a63ad0347041fc93182c2cfa18bc27cda4f4cd2"
+        }
+
+        result = IfThisThenThatHelpers.make_hours_post(data, 8)
+        assert result is not None, "Result Empty"
