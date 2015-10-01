@@ -96,14 +96,14 @@ class HipchatViewSet(viewsets.ViewSet):
                 response = requests.post("http://hoursservice.staging.tangentmicroservices.com/api/v1/entry/", headers=headers, data=json.dumps(entry))
 
                 if response.status_code == requests.codes.accepted:
-                    print "response.text"
+                    print("response.text")
                     return Response("OK", status=status.HTTP_201_CREATED)
                 else:
                     return Response(response.text, status=status.HTTP_400_BAD_REQUEST)
 
-            except requests.HTTPError, e:
-                print 'HTTP ERROR %s occured' % e.code
-                print e
+            except requests.HTTPError as e:
+                print ('HTTP ERROR %s occured' % e.code)
+                print (e)
 
             except Exception as e:
                 raise e
