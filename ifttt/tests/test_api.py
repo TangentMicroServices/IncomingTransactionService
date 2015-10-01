@@ -31,25 +31,29 @@ class TestIFTTTViewSetPOST(TestCase):
 
     def test_create_ifttt_exit(self):
         #Setup
-        data ={ 	"user": "4",
-                                          "project_id": "2",
-                                          "project_task_id": "23",
-                                          "time": "08:12:00 12-09-2015",
-                                          "entered_or_exited": "entered"};
+        data ={"user": "4",
+               "project_id": "2",
+               "project_task_id": "23",
+               "time": "08:12:00 12-09-2015",
+               "entered_or_exited": "entered"}
+
         IncomingRequest.objects.create(user=4, payload=json.dumps(data))
 
         c = Client()
-        response = c.post('/ifttt/', { 	"user": "4",
-                                          "project_id": "2",
-                                          "project_task_id": "23",
-                                          "time": "17:12:00 12-09-2015",
-                                          "entered_or_exited": "exited"})
+        exit_payload = {  "user": "4",
+                          "project_id": "2",
+                          "project_task_id": "23",
+                          "time": "17:12:00 12-09-2015",
+                          "entered_or_exited": "exited"
+                        }
+        response = c.post('/ifttt/', exit_payload)
 
         assert response.status_code == 200, 'Expect 200OK'
 
-        icr_entry = IncomingRequest.objects.get(user=4)
+        icr_entry = IncomingRequest.objects.filter(user=4)[1]
 
         assert icr_entry is not None, 'Expect the Exit Record to Exist'
+        assert icr_entry.payload_as_json == exit_payload, 'Expect {} to equal {}'. format(icr_entry.payload_as_json, exit_payload)
 
     def test_create_ifttt_empty(self):
         '''

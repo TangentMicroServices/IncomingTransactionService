@@ -33,19 +33,25 @@ class IFTTTViewSet(viewsets.ViewSet):
             return Response({'message': 'ERROR', 'description': 'No data is set'}, status=400)
 
         # If exiting an area find corresponding entry time
-        if data['entered_or_exited'] == "exited":
+        if data.get('entered_or_exited', None) == "exited":
             #if IncomingRequest.objects.filter(user=icr.user).order_by('-id')[1].exists():
+            try:
                 entered_icr = IncomingRequest.objects.filter(user=icr.user).order_by('-id')[1]
-                if entered_icr is not None:
-                    # get the entered time
-                    #import ipdb; ipdb.set_trace()
-                    entered_data = json.loads(entered_icr.payload)
-                    time_in = entered_data['time']
-                    time_out = data['time']
-                    # Validate in Model
-                    # Valdiate it is longer than 1 hour
+            except IndexError:
+                return Response({'message': 'ERROR', 'description': 'could not find a matching enter entry'}, status=400)
 
-                    # Validate it is less than 24 hours
+            # get the entered time
+            #import ipdb; ipdb.set_trace()
+            entered_data = entered_icr.payload_as_json
+            exited_data = icr.payload_as_json
+            hours = IfThisThenThatHelpers.get_hours(entered_data, exited_data)
+
+            # time_in = entered_data['time']
+            # time_out = data['time']
+            # Validate in Model
+            # Valdiate it is longer than 1 hour
+
+            # Validate it is less than 24 hours
             # else:
             #     return Response({'message': 'ERROR', 'description': 'No corresponding entered time'}, status=400)
 

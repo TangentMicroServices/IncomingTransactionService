@@ -31,3 +31,12 @@ class WebHookTests(TestCase):
 
 		assert response.status_code == 201, 'Expect 201 CREATED'
 		assert IncomingRequest.objects.count() == 3, 'Expect a webhook object to exist'
+
+class IncomingRequestTests(TestCase):
+
+    def test_payload_as_json(self):
+
+        test_payload_string = '{"foo":"bar"}'
+        icr = DataHelper.incoming_request(payload=test_payload_string)
+
+        assert icr.payload_as_json == json.loads(test_payload_string)
