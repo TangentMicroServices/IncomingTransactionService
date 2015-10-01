@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'webhook',
     'mandrill',
     'ifttt',
+    'hipchat',
 )
 
 MIDDLEWARE_CLASSES = (
