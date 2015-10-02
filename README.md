@@ -53,32 +53,19 @@ Handling incoming email from Mandrill
 
 Handle incoming webhooks from the [maker plugin for IFTTT](https://ifttt.com/maker)
 
-The Simplest Request Sequence for a successful Hours Entry
+## IFTTT Location Based Automatic Hours
 
-```
-{ "user": "4",
-  "project_id": "3",
-  "project_task_id" : "5",
-  "time": "{{OccurredAt}}"
-  "entered_or_exited": "entered"}
-```
+You can do a variety of things with _If This Then That_, the most important for us is: **hours posting based on your entry and exit of a specific area**
 
-Followed by:
+### Sequence of Events for Hours Entry
 
-```
-{ "user": "4",
-  "project_id": "3",
-  "project_task_id: "5",
-  "time": "{{OccurredAt}}".
-  "entered_or_exited": "exited"}
-```
+1. Entering an area sends an `entered` request to the `IncomingTransactionService/ifttt`
+2. Exiting an area sends an `exited` request to the `IncomingTransactionService/ifttt`
+3. Hours are calculated and sent to the `HoursService` with the pay load set in `Ifttt Maker Recipe`
 
-With the following conditions:
-* `entered` and `exited` must occur within 24 hours of each other
+### Setup
 
-#### Setting up the Maker Request for Automatic Hours Logging with Location
-
-1. Go to [IfThisThenThat](https://ifttt.com) Website
+1. Go to the [IfThisThenThat](https://ifttt.com) Website
 or download the [iOS](https://itunes.apple.com/za/app/if-by-ifttt/id660944635?mt=8) or [android](https://play.google.com/store/apps/details?id=com.ifttt.ifttt&hl=en) apps.
 
 2. Go to `My Recipes` -> `Create a Recipe`
@@ -86,6 +73,8 @@ or download the [iOS](https://itunes.apple.com/za/app/if-by-ifttt/id660944635?mt
 3. Click on `this` then add `Android` or `iOS` location
 
 4. Choose the trigger `You enter or Exit an Area`
+
+    **NB:** Make Sure You Select When `You Enter and Exit an Area`
 
 5. Choose the Area
 
@@ -95,20 +84,36 @@ or download the [iOS](https://itunes.apple.com/za/app/if-by-ifttt/id660944635?mt
 
 8. `Make a Web Request`
 
-9. Use the follwing data
+9. Use the following data
 
     ```
-    url : TBA
+    url : http://staging.incoming.tangentmicroservices.com/ifttt/
     method: post
     content-type: application/json
     body:
-    { "user": "<<your_id_here>>",
-      "project_id": "<<project_id_here>>",
-      "project_task_id: "<<project_task_id here>>",
-      "time": "{{OccurredAt}}".
-      "entered_or_exited": "{{EnteredOrExited}} "}
+    user=<<UserId>>&project_id=<<ProjectId>>
+    &project_task_id=<<ProjectTaskId>>
+    &time={{OccurredAt}}
+    &entered_or_exited={{EnteredOrExited}}
+    &auth_token=<<AuthToken>>&comment=<<Comment>>
     ```
 
-10. Create the Action, give it a relevant name. Eg. `african_bank_hours_area`
+    Replace the body above `<<Vars>>` with your corresponding data. They can be found by visiting [hr.tangentme.com](http://hr.tangentme.com/)
+
+10. Create the Action, give it a relevant name. Eg. `african_bank_hours`
 
 11. `Create`
+
+12. Make sure the app is installed on your phone
+
+### What it Doesn't Do Right Now
+
+* **Changeable Comments** -  If your comments are very specific ie. change with each entry then changing your comment _every time_ in the Maker Request payload is not  worth it. So it is best used if your comments are pretty _generic_
+
+* **Overtime**
+
+* **Multiple Days** - The `day` logged will be the `date` at the time the final `exited` request is received. So if you work past midnight, the hours will be logged for the following day you started work.
+
+* **Hour ranges**: `x < 1 or > 24` - `enter` and `exited` requests must occur within 1 and 24 hours
+
+* **Multiple Project Tasks Same Location**
