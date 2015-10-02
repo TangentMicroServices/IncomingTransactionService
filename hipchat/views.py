@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from hipchat.serializers import *
 from webhook.models import *
-from rest_framework.response import Response
+from rest_framework.response import 
 from rest_framework import status
 import json
 import requests
@@ -61,8 +61,9 @@ class HipchatViewSet(viewsets.ViewSet):
             'comments': comments,
         }
 
-        email = self.getEmailAddress("1956381")
-        user = self.getUser("admin@tangentsolutions.co.za")
+        # email = self.getEmailAddress("1956381")
+        email = self.getEmailAddress(str(data['item']['message']['from']['id']))
+        user = self.getUser(email)
 
         if user is not None:
             entry['user'] = user['id']
@@ -97,8 +98,9 @@ class HipchatViewSet(viewsets.ViewSet):
                 response = requests.post("http://hoursservice.staging.tangentmicroservices.com/api/v1/entry/", headers=headers, data=json.dumps(entry))
 
                 if response.status_code == requests.codes.accepted:
-                    print("response.text")
-                    return Response("OK", status=status.HTTP_201_CREATED)
+
+                    hipchat_response = {"color": "green","message": "It's going to be sunny tomorrow! (yey)","notify": False,"message_format": "text"}
+                    return Response(json.decode(hipchat_response), status=status.HTTP_200_OK)
                 else:
                     return Response(response.text, status=status.HTTP_400_BAD_REQUEST)
 
