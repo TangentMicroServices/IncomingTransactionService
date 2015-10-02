@@ -1,6 +1,8 @@
 from django.test import TestCase, Client
 from webhook.models import IncomingRequest
+from ifttt.helpers import IfThisThenThatHelpers
 import responses, json
+from mock import patch, ANY
 
 
 class TestIFTTTViewSetPOST(TestCase):
@@ -20,8 +22,9 @@ class TestIFTTTViewSetPOST(TestCase):
         response = c.post('/ifttt/', { 	"user": "4",
                                           "project_id": "2",
                                           "project_task_id": "23",
-                                          "time": "08:12:00 12-09-2015",
-                                          "entered_or_exited": "entered"})
+                                          "time": "October 1, 2015 at 04:34PM",
+                                          "entered_or_exited": "entered",
+                                          "auth_token" : "Token 4a63ad0347041fc93182c2cfa18bc27cda4f4cd2"})
 
         assert response.status_code == 200, 'Expect 200OK'
 
@@ -29,13 +32,19 @@ class TestIFTTTViewSetPOST(TestCase):
 
         assert icr_entry is not None, 'Expect the Entry Record to Exist'
 
-    def test_create_ifttt_exit(self):
+
+    @patch.object(IfThisThenThatHelpers, 'make_hours_post')
+    def test_create_ifttt_exit(self, mock_get_hours_post):
         #Setup
+
+        mock_get_hours_post.return_value = {}
+
         data ={"user": "4",
                "project_id": "2",
                "project_task_id": "23",
-               "time": "08:12:00 12-09-2015",
-               "entered_or_exited": "entered"}
+               "time": "October 1, 2015 at 04:34PM",
+               "entered_or_exited": "entered",
+               "auth_token" : "Token 4a63ad0347041fc93182c2cfa18bc27cda4f4cd2"}
 
         IncomingRequest.objects.create(user=4, payload=json.dumps(data))
 
@@ -43,17 +52,23 @@ class TestIFTTTViewSetPOST(TestCase):
         exit_payload = {  "user": "4",
                           "project_id": "2",
                           "project_task_id": "23",
-                          "time": "17:12:00 12-09-2015",
-                          "entered_or_exited": "exited"
+                          "time": "October 1, 2015 at 09:34PM",
+                          "entered_or_exited": "exited",
+                          "auth_token" : "Token 4a63ad0347041fc93182c2cfa18bc27cda4f4cd2"
                         }
         response = c.post('/ifttt/', exit_payload)
 
         assert response.status_code == 200, 'Expect 200OK'
 
+
         icr_entry = IncomingRequest.objects.filter(user=4)[1]
 
+        mock_get_hours_post.assert_called_with(ANY, 5)
+        
         assert icr_entry is not None, 'Expect the Exit Record to Exist'
         assert icr_entry.payload_as_json == exit_payload, 'Expect {} to equal {}'. format(icr_entry.payload_as_json, exit_payload)
+
+
 
     def test_create_ifttt_empty(self):
         '''

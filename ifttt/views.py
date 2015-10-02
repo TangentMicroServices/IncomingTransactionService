@@ -40,20 +40,19 @@ class IFTTTViewSet(viewsets.ViewSet):
             except IndexError:
                 return Response({'message': 'ERROR', 'description': 'could not find a matching enter entry'}, status=400)
 
-            # get the entered time
-            #import ipdb; ipdb.set_trace()
+            # get the total number of hours
             entered_data = entered_icr.payload_as_json
             exited_data = icr.payload_as_json
+
             hours = IfThisThenThatHelpers.get_hours(entered_data, exited_data)
+            #import ipdb; ipdb.set_trace()
 
-            # time_in = entered_data['time']
-            # time_out = data['time']
-            # Validate in Model
-            # Valdiate it is longer than 1 hour
-
-            # Validate it is less than 24 hours
-            # else:
-            #     return Response({'message': 'ERROR', 'description': 'No corresponding entered time'}, status=400)
+            #get token
+            token = entered_data["auth_token"]
+            # Make the Hours Request
+            response = IfThisThenThatHelpers.make_hours_post(entered_data, hours)
+            
+            # Check the response from hours
 
         return Response({'message': 'OK', 'data': data}, status=200)
 
