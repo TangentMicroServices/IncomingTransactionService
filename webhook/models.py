@@ -11,6 +11,10 @@ SOURCE_CHOICES = (
 )
 
 class IncomingRequest(models.Model):
+
+    def __str__(self):
+        return self.payload
+
     last_edited = models.DateTimeField(auto_now=True,db_index=True)
     created = models.DateTimeField(auto_now_add=True,db_index=True)    
     source = models.CharField(max_length=2, choices=SOURCE_CHOICES, default=UNKNOWN)
