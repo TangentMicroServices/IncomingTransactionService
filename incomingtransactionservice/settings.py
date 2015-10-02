@@ -100,3 +100,5 @@ REST_FRAMEWORK = {
 
 # April 29, 2013 at 12:01PM
 DATE_FORMAT = "%B %d, %Y at %I:%M%p"
+
+from local_settings import *
