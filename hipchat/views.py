@@ -2,7 +2,6 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from hipchat.serializers import *
 from webhook.models import *
-from rest_framework.response import 
 from rest_framework import status
 import json
 import requests
