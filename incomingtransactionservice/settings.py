@@ -101,6 +101,9 @@ REST_FRAMEWORK = {
 # April 29, 2013 at 12:01PM
 DATE_FORMAT = "%B %d, %Y at %I:%M%p"
 
+## Custom variables:
+MICROSERVICE_TLD = 'staging.tangentmicroservices.com'
+
 try:
     from local_settings import *
 except:

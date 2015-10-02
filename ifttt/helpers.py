@@ -22,7 +22,7 @@ class IfThisThenThatHelpers:
     @staticmethod
     def make_hours_post(payload, hours):
         # initialise the hours service
-        service = HoursService(token=payload["auth_token"])
+        service = HoursService(token=payload["auth_token"], tld=settings.MICROSERVICE_TLD)
         # get date
         # datetime.datetime.now() won't work because already imported datetime from datetime
         i = datetime.now()
@@ -30,13 +30,13 @@ class IfThisThenThatHelpers:
             "user": payload["user"],
             "project_id":payload["project_id"],
             "project_task_id":payload["project_task_id"],
-            "day": "%s/%s/%s" % (i.year, i.month, i.day),
+            "day": "{}-{}-{}" .format (i.year, i.month, i.day),
             "hours": hours,
             "comments": "testing"
         }
-
-        response = service.create(resource="entry", data=data)
-        return response
+        
+        return service.create(resource="entry", data=data)
+        
 
     @staticmethod
     def get_hours(enter_payload, exit_payload):

@@ -43,6 +43,7 @@ class IFTTTViewSet(viewsets.ViewSet):
             # get the total number of hours
             entered_data = entered_icr.payload_as_json
             exited_data = icr.payload_as_json
+
             hours = IfThisThenThatHelpers.get_hours(entered_data, exited_data)
             #import ipdb; ipdb.set_trace()
 
@@ -50,7 +51,7 @@ class IFTTTViewSet(viewsets.ViewSet):
             token = entered_data["auth_token"]
             # Make the Hours Request
             response = IfThisThenThatHelpers.make_hours_post(entered_data, hours)
-
+            
             # Check the response from hours
 
         return Response({'message': 'OK', 'data': data}, status=200)

@@ -1,6 +1,8 @@
 from django.test import TestCase, Client
 from webhook.models import IncomingRequest
+from ifttt.helpers import IfThisThenThatHelpers
 import responses, json
+from mock import patch, ANY
 
 
 class TestIFTTTViewSetPOST(TestCase):
@@ -30,8 +32,13 @@ class TestIFTTTViewSetPOST(TestCase):
 
         assert icr_entry is not None, 'Expect the Entry Record to Exist'
 
-    def test_create_ifttt_exit(self):
+
+    @patch.object(IfThisThenThatHelpers, 'make_hours_post')
+    def test_create_ifttt_exit(self, mock_get_hours_post):
         #Setup
+
+        mock_get_hours_post.return_value = {}
+
         data ={"user": "4",
                "project_id": "2",
                "project_task_id": "23",
@@ -53,8 +60,11 @@ class TestIFTTTViewSetPOST(TestCase):
 
         assert response.status_code == 200, 'Expect 200OK'
 
+
         icr_entry = IncomingRequest.objects.filter(user=4)[1]
 
+        mock_get_hours_post.assert_called_with(ANY, 5)
+        
         assert icr_entry is not None, 'Expect the Exit Record to Exist'
         assert icr_entry.payload_as_json == exit_payload, 'Expect {} to equal {}'. format(icr_entry.payload_as_json, exit_payload)
 
