@@ -49,7 +49,7 @@ class TestIFTTTHelpers(TestCase):
     def test_hours_service_post(self):
 
         mock_response = {
-            "foo":"bar",            
+            "foo":"bar",
         }
 
         responses.add(responses.POST, "http://hoursservice.staging.tangentmicroservices.com/api/v1/entry/",
@@ -62,11 +62,11 @@ class TestIFTTTHelpers(TestCase):
           "project_task_id": "57",
           "time": "October 1, 2015 at 09:34PM",
           "entered_or_exited": "exited",
-          "auth_token" : "371d3b5584b977abb8005e57eb04aacc76b703f1"
+          "auth_token" : "abcdef123456"
         }
 
         result = IfThisThenThatHelpers.make_hours_post(data, 8)
-        
+
         from requests import Response
 
         assert isinstance(result, Response)
