@@ -117,12 +117,8 @@ class IfThisThenThatHelpers:
         entered_date = enter_payload["time"]
         exited_date = exit_payload["time"]
 
-        hours = IfThisThenThatHelpers.calculate_hours_diff(entered_date, exited_date)
-        if hours in range(1, 24):
-            return hours
-        else:
-            raise Exception("Hours out of Range")
-
+        return IfThisThenThatHelpers.calculate_hours_diff(entered_date, exited_date)
+        
 
     #takes time strings, not objects
     @staticmethod
