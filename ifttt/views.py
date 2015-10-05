@@ -55,7 +55,7 @@ class IFTTTViewSet(viewsets.ViewSet):
             token = entered_data["auth_token"]
             # Make the Hours Request
             response = IfThisThenThatHelpers.make_hours_post(entered_data, hours)
-            
+                        
             IfThisThenThatHelpers.post_to_hipchat(icr.payload_as_json)
             hipchat_speak("{} hours logged" . format (hours))
             # Check the response from hours

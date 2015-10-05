@@ -76,6 +76,10 @@ class IfThisThenThatHelpers:
         # get date
         # datetime.datetime.now() won't work because already imported datetime from datetime
         i = datetime.now()
+
+        # todo:
+        # if hours in range(0,24):
+
         data = {
             "user": payload["user"],
             "project_id":payload["project_id"],
