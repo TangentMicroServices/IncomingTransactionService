@@ -103,6 +103,7 @@ DATE_FORMAT = "%B %d, %Y at %I:%M%p"
 
 ## Custom variables:
 MICROSERVICE_TLD = 'staging.tangentmicroservices.com'
+HIPCHAT_ROOM_ID = '873614'
 
 try:
     from local_settings import *

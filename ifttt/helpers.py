@@ -1,4 +1,4 @@
-import json
+import json, requests
 from django.conf import settings
 from datetime import datetime
 from microclient.clients import HoursService
@@ -7,6 +7,28 @@ def convert_string_time(str):
     ctime = datetime.strptime(str, settings.DATE_FORMAT )
     return ctime
 
+
+def hipchat_speak(room, message, from_name="Mr Robot"):
+    '''
+    Utility to make it easy to post to hipchat 
+    Includes this app's context
+    '''
+
+    '''
+    url = "https://api.hipchat.com/v2/room/{}/notification?auth_token={}" . format (room, token)
+    return requests.post(url, {"message":message})
+    '''
+    token = settings.HIPCHAT_AUTH_TOKEN
+    room = settings.HIPCHAT_ROOM_ID
+    
+    url ='https://api.hipchat.com/v1/rooms/message?format=json&auth_token={}' . format (token)
+    data = {
+        "room_id": room,
+        "from": from_name,
+        "message": message
+    }
+    return requests.post(url, data)
+    
 
 class IfThisThenThatHelpers:
 
@@ -69,3 +91,4 @@ class IfThisThenThatHelpers:
             hours=hours*-1
 
         return hours
+
