@@ -32,11 +32,11 @@ class IfThisThenThatHelpers:
             "project_task_id":payload["project_task_id"],
             "day": "{}-{}-{}" .format (i.year, i.month, i.day),
             "hours": hours,
-            "comments": "testing"
+            "comments": payload.get("comment", "default comment")
         }
-        
+
         return service.create(resource="entry", data=data)
-        
+
 
     @staticmethod
     def get_hours(enter_payload, exit_payload):
@@ -61,8 +61,9 @@ class IfThisThenThatHelpers:
         exited = convert_string_time(exited_time)
         delta = (exited - entered)
         seconds = abs(delta.days * 86400) + delta.seconds
+        hours = round(seconds/3600.0)
+
         #import pdb;pdb.set_trace()
-        hours = round(seconds/3600)
 
         if exited < entered:
             hours=hours*-1
