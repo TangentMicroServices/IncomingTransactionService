@@ -31,14 +31,15 @@ class TestIFTTTViewSetPOST(TestCase):
         assert mock_post_to_hipchat.called == True, 'Expect hipchat message to have been posted'
 
     
-    @unittest.skip("Temporarily disabling while we try work out why patching hipchat_speak is not working")
+    @responses.activate
     @patch.object(IfThisThenThatHelpers, 'post_to_hipchat')
     @patch.object(IfThisThenThatHelpers, 'make_hours_post')
-    @patch('ifttt.helpers.hipchat_speak')
     def test_create_ifttt_exit(self, 
-        mock_hipchat_speak,
         mock_get_hours_post, 
         mock_post_to_hipchat):
+
+        # mock hipchat message
+        responses.add(responses.POST, 'https://api.hipchat.com/v1/rooms/message')
         
         mock_get_hours_post.return_value = {}
 
@@ -70,7 +71,7 @@ class TestIFTTTViewSetPOST(TestCase):
         assert icr_entry is not None, 'Expect the Exit Record to Exist'
         assert icr_entry.payload_as_json == exit_payload, 'Expect {} to equal {}'. format(icr_entry.payload_as_json, exit_payload)
         assert mock_post_to_hipchat.called == True, 'Expect hipchat message to have been posted'
-        #mock_hipchat_speak.assert_called_with('5 hours logged')
+        assert len(responses.calls) == 1, 'Expect 1x call to Hipchat'
 
     @responses.activate
     def test_create_ifttt_exit_invalid_hours_calculation(self):
