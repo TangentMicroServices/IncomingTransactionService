@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework import viewsets
-from ifttt.helpers import IfThisThenThatHelpers
+from ifttt.helpers import IfThisThenThatHelpers, hipchat_speak
 from webhook.models import IncomingRequest
 import requests
 import logging, json
@@ -32,6 +32,10 @@ class IFTTTViewSet(viewsets.ViewSet):
         if not data or data is None:
             return Response({'message': 'ERROR', 'description': 'No data is set'}, status=400)
 
+        if data.get('entered_or_exited', None) == 'entered':
+
+            IfThisThenThatHelpers.post_to_hipchat(icr.payload_as_json)
+
         # If exiting an area find corresponding entry time
         if data.get('entered_or_exited', None) == "exited":
             #if IncomingRequest.objects.filter(user=icr.user).order_by('-id')[1].exists():
@@ -52,6 +56,8 @@ class IFTTTViewSet(viewsets.ViewSet):
             # Make the Hours Request
             response = IfThisThenThatHelpers.make_hours_post(entered_data, hours)
             
+            IfThisThenThatHelpers.post_to_hipchat(icr.payload_as_json)
+            hipchat_speak("{} hours logged" . format (hours))
             # Check the response from hours
 
         return Response({'message': 'OK', 'data': data}, status=200)

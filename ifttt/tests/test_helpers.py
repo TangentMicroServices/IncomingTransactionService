@@ -1,6 +1,46 @@
 from django.test import TestCase
-from ifttt.helpers import IfThisThenThatHelpers
+from ifttt.helpers import IfThisThenThatHelpers, get_hipchat_message, quick_validate
 import responses, json
+from mock import patch
+
+class MockResponse:
+
+    def __init__(self, content, status_code=200):
+        self.status_code=status_code
+        self.content = json.dumps(content)
+
+    def json(self):
+        return json.loads(self.content)
+
+class GenericHelpersTestCase(TestCase):
+
+    def test_quick_validate_validation_fails(self):
+
+        with self.assertRaises(AssertionError):
+            quick_validate(['foo'], {})
+
+    def test_quick_validate_valid_input(self):
+
+        quick_validate(['foo'], {'foo':'bar'})
+
+
+class HipchatIntegrationTestCase(TestCase):
+
+    def test_get_hipchat_message_entered(self):
+        user = {"first_name": "Joe"}
+        project = {"title": "ACME"}
+
+        message = get_hipchat_message(user, project, "entered")
+
+        assert message == 'Joe has arrived at ACME'
+
+    def test_get_hipchat_message_exited(self):
+        user = {"first_name": "Joe"}
+        project = {"title": "ACME"}
+
+        message = get_hipchat_message(user, project, "exited")
+        
+        self.assertEqual(message, 'Joe has left ACME')
 
 class TestIFTTTHelpers(TestCase):
 
@@ -8,6 +48,45 @@ class TestIFTTTHelpers(TestCase):
         pass
 
     def tearDown(self):
+        pass
+
+    @patch('ifttt.helpers.hipchat_speak')
+    @patch('ifttt.helpers.get_project')
+    @patch('ifttt.helpers.get_current_user')
+    def test_post_to_hipchat(self, 
+            mock_get_current_user, 
+            mock_get_project,
+            mock_hipchat_speak):
+
+        mock_user_response = MockResponse({"first_name": "Joe"})
+        mock_project_response = MockResponse({"title": "ACME"})
+
+        mock_get_current_user.return_value = mock_user_response
+        mock_get_project.return_value = mock_project_response
+        
+        payload = {
+            'auth_token': '123',
+            'user': 1,
+            'project_id': 2,
+            'entered_or_exited': 'entered'
+        }
+
+        # item under test:
+        IfThisThenThatHelpers.post_to_hipchat(payload)
+
+        # assertions
+        mock_hipchat_speak.assert_called_with('Joe has arrived at ACME')
+        
+    def test_post_to_hipchat_no_user_found(self):
+        '''
+        TBD
+        '''
+        pass
+
+    def test_post_to_hipchat_no_project_found(self):
+        '''
+        TBD
+        '''
         pass
 
     def test_calculate_difference(self):
