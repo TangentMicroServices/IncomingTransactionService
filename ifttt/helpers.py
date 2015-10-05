@@ -93,6 +93,9 @@ class IfThisThenThatHelpers:
 
     @staticmethod 
     def post_to_hipchat(payload):
+        """
+        Given an IFTTT payload, correctly post messages to HipChat
+        """
         
         required_fields = ['user', 'project_id', 'entered_or_exited', 'auth_token']
         quick_validate(required_fields, payload)        
