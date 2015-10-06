@@ -12,9 +12,16 @@ class TestIFTTTHelpers(TestCase):
 
     def test_calculate_difference(self):
         inputs = [
+            ("April 29, 2013 at 08:01PM", "April 29, 2013 at 08:01PM", 0),
+            ("April 29, 2013 at 08:01PM", "April 29, 2013 at 08:15PM", 0),
+            ("April 29, 2013 at 08:01PM", "April 29, 2013 at 08:16PM", 0.5),
+            ("April 29, 2013 at 08:01PM", "April 29, 2013 at 08:30PM", 0.5),
+            ("April 29, 2013 at 08:01PM", "April 29, 2013 at 08:31PM", 0.5),
+            ("April 29, 2013 at 08:01PM", "April 29, 2013 at 08:45PM", 0.5),
+            ("April 29, 2013 at 08:01PM", "April 29, 2013 at 08:46PM", 1),
             ("April 29, 2013 at 08:01PM", "April 29, 2013 at 09:01PM", 1),
-            ("April 29, 2013 at 08:01PM", "April 29, 2013 at 08:32PM", 1),
-            ("April 29, 2013 at 08:01PM", "April 29, 2013 at 08:29PM", 0),
+            ("April 29, 2013 at 08:01PM", "April 29, 2013 at 09:15PM", 1),
+            ("April 29, 2013 at 08:01PM", "April 29, 2013 at 09:16PM", 1.5)
         ]
 
         for entered, exited, expected in inputs:
