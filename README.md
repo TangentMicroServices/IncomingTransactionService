@@ -114,7 +114,7 @@ or download the [iOS](https://itunes.apple.com/za/app/if-by-ifttt/id660944635?mt
 
 The maker part of your recipe should look something along the lines of: 
 
-![https://s3-us-west-2.amazonaws.com/tangentsolutions.co.za/ifttt.PNG](ifttt)
+![ifttt recipe](https://s3-us-west-2.amazonaws.com/tangentsolutions.co.za/ifttt.PNG)
 
 ### What it Doesn't Do Right Now
 
