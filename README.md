@@ -89,7 +89,7 @@ or download the [iOS](https://itunes.apple.com/za/app/if-by-ifttt/id660944635?mt
     ```
     url : http://staging.incoming.tangentmicroservices.com/ifttt/
     method: post
-    content-type: application/json
+    content-type: application/x-www-form-encoded
     body:
     user=<<UserId>>&project_id=<<ProjectId>>
     &project_task_id=<<ProjectTaskId>>
@@ -105,6 +105,10 @@ or download the [iOS](https://itunes.apple.com/za/app/if-by-ifttt/id660944635?mt
 11. `Create`
 
 12. Make sure the app is installed on your phone
+
+The maker part of your recipe should look something along the lines of: 
+
+![http://staging.incoming.tangentmicroservices.com/ifttt/](Creating an IFTTT recipe)
 
 ### What it Doesn't Do Right Now
 
