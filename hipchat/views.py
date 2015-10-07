@@ -18,7 +18,7 @@ class HipchatViewSet(viewsets.ViewSet):
         payload = {"format":"json", "user_id": hipchat_user_id, "auth_token": settings.HIPCHAT_AUTH_TOKEN}
 
         try:
-            response = requests.get(settings.HIPCHAT_BASE_URI, params=payload)
+            response = requests.get(settings.HIPCHAT_BASE_URI + "users/show", params=payload)
             if response.status_code == requests.codes.ok:
                 email_address = json.loads(response.text)['user']['email']
                 return email_address
