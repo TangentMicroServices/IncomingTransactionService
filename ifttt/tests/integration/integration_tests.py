@@ -80,7 +80,7 @@ class TestIFTTTAPIIntegration(TestCase):
         exit_payload = {  "user": "3",
                           "project_id": "3",
                           "project_task_id": "2",
-                          "time": "October 1, 2015 at 04:01PM",
+                          "time": "October 1, 2015 at 04:31PM",
                           "entered_or_exited": "exited",
                           "auth_token" : "5e971505f6901ec76bfb53c990b2ab488d2d08e6"
                         }

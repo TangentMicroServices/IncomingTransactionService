@@ -51,7 +51,7 @@ class IFTTTViewSet(viewsets.ViewSet):
 
             hours = IfThisThenThatHelpers.get_hours(entered_data, exited_data)
             
-            if hours in range(1,25):
+            if hours > 0 and hours <= 24:
                 token = entered_data["auth_token"]
                 # Make the Hours Request
                 response = IfThisThenThatHelpers.make_hours_post(entered_data, hours)
