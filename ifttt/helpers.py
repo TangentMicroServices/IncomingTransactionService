@@ -76,10 +76,6 @@ class IfThisThenThatHelpers:
         # get date
         # datetime.datetime.now() won't work because already imported datetime from datetime
         i = datetime.now()
-
-        # todo:
-        # if hours in range(0,24):
-
         data = {
             "user": payload["user"],
             "project_id":payload["project_id"],
@@ -131,7 +127,7 @@ class IfThisThenThatHelpers:
         exited = convert_string_time(exited_time)
         delta = (exited - entered)
         seconds = abs(delta.days * 86400) + delta.seconds
-        hours = round(seconds/3600.0)
+        hours = IfThisThenThatHelpers.round_to(seconds/3600.0, 0.5)
 
         #import pdb;pdb.set_trace()
 
@@ -140,3 +136,7 @@ class IfThisThenThatHelpers:
 
         return hours
 
+    @staticmethod
+    def round_to(n, precision):
+        correction = 0.5 if n >= 0 else -0.5
+        return int( n/precision+correction ) * precision

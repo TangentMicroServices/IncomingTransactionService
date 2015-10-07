@@ -93,7 +93,7 @@ or download the [iOS](https://itunes.apple.com/za/app/if-by-ifttt/id660944635?mt
     ```
     url : http://staging.incoming.tangentmicroservices.com/ifttt/
     method: post
-    content-type: application/json
+    content-type: application/x-www-form-encoded
     body:
     user=<<UserId>>&project_id=<<ProjectId>>
     &project_task_id=<<ProjectTaskId>>
@@ -101,14 +101,24 @@ or download the [iOS](https://itunes.apple.com/za/app/if-by-ifttt/id660944635?mt
     &entered_or_exited={{EnteredOrExited}}
     &auth_token=<<AuthToken>>&comment=<<Comment>>
     ```
-
+    
     Replace the body above `<<Vars>>` with your corresponding data. They can be found by visiting [hr.tangentme.com](http://hr.tangentme.com/)
+    
+    An example body might be: 
+    
+    ```
+    user=1&project_id=43&project_task_id=57&time={{OccurredAt}}&entered_or_exited={{EnteredOrExited}}&auth_token= ...&comment=AfricanBank
+    ```
 
 10. Create the Action, give it a relevant name. Eg. `african_bank_hours`
 
 11. `Create`
 
 12. Make sure the app is installed on your phone
+
+The maker part of your recipe should look something along the lines of: 
+
+![ifttt recipe](https://s3-us-west-2.amazonaws.com/tangentsolutions.co.za/ifttt.PNG)
 
 ### What it Doesn't Do Right Now
 
