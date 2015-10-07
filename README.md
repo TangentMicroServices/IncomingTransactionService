@@ -33,7 +33,11 @@ A service for fielding incoming webhooks
 
         python manage.py test
 
-7. Profit
+7. Run integration tests:
+
+        python manage.py test -p integration_test*
+
+8. Profit
 
 ## Webhook handlers
 

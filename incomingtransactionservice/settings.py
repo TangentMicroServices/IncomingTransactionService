@@ -101,8 +101,12 @@ REST_FRAMEWORK = {
 # April 29, 2013 at 12:01PM
 DATE_FORMAT = "%B %d, %Y at %I:%M%p"
 
+## Variables for integration tests: 
+TEST_TOKEN = ''
+
 ## Custom variables:
 MICROSERVICE_TLD = 'staging.tangentmicroservices.com'
+HIPCHAT_ROOM_ID = '873614'
 
 try:
     from local_settings import *
