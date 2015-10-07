@@ -61,7 +61,7 @@ class IfThisThenThatHelpers:
         exited = convert_string_time(exited_time)
         delta = (exited - entered)
         seconds = abs(delta.days * 86400) + delta.seconds
-        hours = round(seconds/3600.0)
+        hours = IfThisThenThatHelpers.round_to(seconds/3600.0, 0.5)
 
         #import pdb;pdb.set_trace()
 
@@ -69,3 +69,8 @@ class IfThisThenThatHelpers:
             hours=hours*-1
 
         return hours
+
+    @staticmethod
+    def round_to(n, precision):
+        correction = 0.5 if n >= 0 else -0.5
+        return int( n/precision+correction ) * precision
