@@ -3,6 +3,7 @@ from rest_framework import viewsets
 from hipchat.serializers import *
 from webhook.models import *
 from rest_framework import status
+from rest_framework.response import Response
 import json
 import requests
 import datetime
@@ -15,10 +16,9 @@ class HipchatViewSet(viewsets.ViewSet):
         Returns the users email address from hipchat
         """
         payload = {"format":"json", "user_id": hipchat_user_id, "auth_token": settings.HIPCHAT_AUTH_TOKEN}
-        url = "https://api.hipchat.com/v1/users/show"
 
         try:
-            response = requests.get(url, params=payload)
+            response = requests.get(settings.HIPCHAT_BASE_URI, params=payload)
             if response.status_code == requests.codes.ok:
                 email_address = json.loads(response.text)['user']['email']
                 return email_address
@@ -29,11 +29,14 @@ class HipchatViewSet(viewsets.ViewSet):
     def getUser(self, email):
         try:
             headers = {
-                'Authorization': 'Token 5e971505f6901ec76bfb53c990b2ab488d2d08e6',
+                'Authorization': 'Token ' + settings.TANGENT_ADMIN_TOKEN,
                 'Content-Type': 'application/json'
             }
 
-            response = requests.get("http://userservice.staging.tangentmicroservices.com/api/v1/users/", headers=headers)
+            response = requests.get( settings.USERSERVICE_BASE_URI + "api/v1/users/", headers=headers)
+
+            print settings.TANGENT_ADMIN_TOKEN
+            print settings.USERSERVICE_BASE_URI
 
             if response.status_code == requests.codes.ok:
                 users = json.loads(response.text)
@@ -90,24 +93,22 @@ class HipchatViewSet(viewsets.ViewSet):
 
             try:
                 headers = {
-                    'Authorization': 'Token 5e971505f6901ec76bfb53c990b2ab488d2d08e6',
+                    'Authorization': 'Token ' + settings.TANGENT_ADMIN_TOKEN,
                     'Content-Type': 'application/json'
                 }
 
-                response = requests.post("http://hoursservice.staging.tangentmicroservices.com/api/v1/entry/", headers=headers, data=json.dumps(entry))
-
-                if response.status_code == requests.codes.accepted:
-
-                    hipchat_response = {"color": "green","message": "It's going to be sunny tomorrow! (yey)","notify": False,"message_format": "text"}
-                    return Response(json.decode(hipchat_response), status=status.HTTP_200_OK)
+                response = requests.post( settings.HOURSSERVICE_BASE_URI +"entry/", headers=headers, data=json.dumps(entry))
+                # print response.status_code
+                if response.status_code == requests.codes.created:
+                    return Response(json.dumps({"color": "green","message": "Entry successfully logged (rockon)","notify": False,"message_format": "text"}), status=status.HTTP_200_OK)
                 else:
-                    return Response(response.text, status=status.HTTP_400_BAD_REQUEST)
+                    return Response(json.dumps({"color": "red","message": "Entry could not be logged (sadpanda)","notify": False,"message_format": "text"}), status=status.HTTP_400_BAD_REQUEST)
 
             except requests.HTTPError as e:
-                print ('HTTP ERROR %s occured' % e.code)
-                print (e)
+                # print ('HTTP ERROR %s occured' % e.code)
+                raise e
 
             except Exception as e:
                 raise e
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
