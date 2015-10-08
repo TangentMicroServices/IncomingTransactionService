@@ -35,8 +35,8 @@ class HipchatViewSet(viewsets.ViewSet):
 
             response = requests.get( settings.USERSERVICE_BASE_URI + "/api/v1/users/", headers=headers)
 
-            print settings.TANGENT_ADMIN_TOKEN
-            print settings.USERSERVICE_BASE_URI
+            print (settings.TANGENT_ADMIN_TOKEN)
+            print (settings.USERSERVICE_BASE_URI)
 
             if response.status_code == requests.codes.ok:
                 users = json.loads(response.text)
