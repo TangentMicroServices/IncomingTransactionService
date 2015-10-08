@@ -57,9 +57,9 @@ class IFTTTViewSet(viewsets.ViewSet):
                 response = IfThisThenThatHelpers.make_hours_post(entered_data, hours)
 
                 IfThisThenThatHelpers.post_to_hipchat(icr.payload_as_json)
-                hipchat_speak("{} hours logged" . format (hours))
+                hipchat_speak("(successful) {} hours logged" . format (hours))
             else: 
-                message = "Invalid hours amount encountered: {} hours. Please capture your hours manually" . format (hours)
+                message = "(failed) Invalid hours amount encountered: {} hours. Please capture your hours manually" . format (hours)
                 hipchat_speak(message)
             # Check the response from hours
 
