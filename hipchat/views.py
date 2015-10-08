@@ -73,6 +73,12 @@ class HipchatViewSet(viewsets.ViewSet):
         return entry
 
     def create(self, request, format=None):
+        """
+        * Save IncomingRequest 
+        * Get user from UserService 
+        * Get project info from ProjectService
+        * Post result back to HipChat
+        """
 
         entry = self.getEntryFromPost(request.data)
 
