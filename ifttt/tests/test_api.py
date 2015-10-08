@@ -48,9 +48,10 @@ class TestIFTTTViewSetPOST(TestCase):
                "project_task_id": "23",
                "time": "October 1, 2015 at 04:34PM",
                "entered_or_exited": "entered",
+               "source": "IT",
                "auth_token" : "abcdef123456"}
 
-        IncomingRequest.objects.create(user=4, payload=json.dumps(data))
+        IncomingRequest.objects.create(user=4, source='IT', payload=json.dumps(data))
 
         c = Client()
         exit_payload = {  "user": "4",
@@ -73,6 +74,25 @@ class TestIFTTTViewSetPOST(TestCase):
         assert mock_post_to_hipchat.called == True, 'Expect hipchat message to have been posted'
         assert len(responses.calls) == 1, 'Expect 1x call to Hipchat'
 
+    @patch.object(IfThisThenThatHelpers, 'get_hours')
+    def test_create_ifttt_exit_dont_count_webhook_entry_from_other_webhook(self, mock_get_hours):
+
+        IncomingRequest.objects.create(user=4, source='UK', payload='{}')
+        c = Client()
+        exit_payload = {  "user": "4",
+                          "project_id": "2",
+                          "project_task_id": "23",
+                          "time": "October 1, 2015 at 09:34PM",
+                          "entered_or_exited": "exited",
+                          "auth_token" : "abcdef123456"
+                        }
+        response = c.post('/ifttt/', exit_payload)
+
+        assert response.status_code == 200, 'Expect 200OK' \
+        "It must fail with 200 if no entry is found (so user gets notification)"
+        assert not mock_get_hours.called, "It should not reach this part of the code"
+        #assert json.loads(response.content).get("message") == "ERROR"
+
     @responses.activate
     def test_create_ifttt_exit_invalid_hours_calculation(self):
         
@@ -82,10 +102,10 @@ class TestIFTTTViewSetPOST(TestCase):
                "project_id": "2",
                "project_task_id": "23",
                "time": "October 1, 2015 at 04:00PM",
-               "entered_or_exited": "entered",
+               "entered_or_exited": "entered",               
                "auth_token" : "abcdef123456"}
 
-        IncomingRequest.objects.create(user=4, payload=json.dumps(data))
+        IncomingRequest.objects.create(user=4, source='IT', payload=json.dumps(data))
 
         c = Client()
         exit_payload = {  "user": "4",
@@ -98,7 +118,6 @@ class TestIFTTTViewSetPOST(TestCase):
         response = c.post('/ifttt/', exit_payload)
 
         assert response.status_code == 200, 'Expect 200OK'
-
         assert len(responses.calls) == 1, 'Expect there to be a call to hipchat'
 
 

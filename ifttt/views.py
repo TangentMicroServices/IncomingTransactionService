@@ -38,9 +38,9 @@ class IFTTTViewSet(viewsets.ViewSet):
 
         # If exiting an area find corresponding entry time
         if data.get('entered_or_exited', None) == "exited":
-            #if IncomingRequest.objects.filter(user=icr.user).order_by('-id')[1].exists():
+
             try:
-                entered_icr = IncomingRequest.objects.filter(user=icr.user).order_by('-id')[1]
+                entered_icr = IncomingRequest.objects.filter(user=icr.user, source='IT').order_by('-id')[1]
             except IndexError:
                 data = {'message': 'ERROR', 'description': 'could not find a matching enter entry'}
                 return Response(data, status=200, content_type='application/json')
