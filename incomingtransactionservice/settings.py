@@ -39,6 +39,7 @@ INSTALLED_APPS = (
 
     #3rd party:
     'rest_framework',
+    'django_jenkins',
 
     # custom:
     'webhook',
@@ -107,6 +108,8 @@ TEST_TOKEN = ''
 ## Custom variables:
 MICROSERVICE_TLD = 'staging.tangentmicroservices.com'
 HIPCHAT_ROOM_ID = '873614'
+
+PROJECT_APPS = ['webhook', 'mandrill', 'ifttt', 'hipchat',]
 
 try:
     from local_settings import *
