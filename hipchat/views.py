@@ -18,7 +18,7 @@ class HipchatViewSet(viewsets.ViewSet):
         payload = {"format":"json", "user_id": hipchat_user_id, "auth_token": settings.HIPCHAT_AUTH_TOKEN}
 
         try:
-            response = requests.get(settings.HIPCHAT_BASE_URI + "users/show", params=payload)
+            response = requests.get(settings.HIPCHAT_BASE_URI + "/users/show", params=payload)
             if response.status_code == requests.codes.ok:
                 email_address = json.loads(response.text)['user']['email']
                 return email_address
@@ -33,7 +33,7 @@ class HipchatViewSet(viewsets.ViewSet):
                 'Content-Type': 'application/json'
             }
 
-            response = requests.get( settings.USERSERVICE_BASE_URI + "api/v1/users/", headers=headers)
+            response = requests.get( settings.USERSERVICE_BASE_URI + "/api/v1/users/", headers=headers)
 
             print settings.TANGENT_ADMIN_TOKEN
             print settings.USERSERVICE_BASE_URI
@@ -97,7 +97,7 @@ class HipchatViewSet(viewsets.ViewSet):
                     'Content-Type': 'application/json'
                 }
 
-                response = requests.post( settings.HOURSSERVICE_BASE_URI +"entry/", headers=headers, data=json.dumps(entry))
+                response = requests.post( settings.HOURSSERVICE_BASE_URI +"/entry/", headers=headers, data=json.dumps(entry))
                 # print response.status_code
                 if response.status_code == requests.codes.created:
                     return Response(json.dumps({"color": "green","message": "Entry successfully logged (rockon)","notify": False,"message_format": "text"}), status=status.HTTP_200_OK)
