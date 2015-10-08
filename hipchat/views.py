@@ -9,6 +9,9 @@ import requests
 import datetime
 from django.conf import settings
 
+## refactor this to global package:
+from ifttt.helpers import hipchat_speak
+
 class HipchatViewSet(viewsets.ViewSet):
 
     def getEmailAddress(self, hipchat_user_id ):
@@ -106,9 +109,13 @@ class HipchatViewSet(viewsets.ViewSet):
                 response = requests.post( settings.HOURSSERVICE_BASE_URI +"/entry/", headers=headers, data=json.dumps(entry))
                 # print response.status_code
                 if response.status_code == requests.codes.created:
-                    return Response(json.dumps({"color": "green","message": "Entry successfully logged (rockon)","notify": False,"message_format": "text"}), status=status.HTTP_200_OK)
+                    message = "Entry successfully logged (rockon)"
+                    hipchat_speak(message)
+                    return Response(json.dumps({"color": "green","message": message,"notify": False,"message_format": "text"}), status=status.HTTP_200_OK)
                 else:
-                    return Response(json.dumps({"color": "red","message": "Entry could not be logged (sadpanda)","notify": False,"message_format": "text"}), status=status.HTTP_400_BAD_REQUEST)
+                    message = "Entry could not be logged (sadpanda)"
+                    hipchat_speak(message)
+                    return Response(json.dumps({"color": "red","message": message,"notify": False,"message_format": "text"}), status=status.HTTP_400_BAD_REQUEST)
 
             except requests.HTTPError as e:
                 # print ('HTTP ERROR %s occured' % e.code)

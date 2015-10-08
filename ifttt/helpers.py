@@ -28,7 +28,8 @@ def hipchat_speak(message, from_name="Mr Robot"):
     data = {
         "room_id": room,
         "from": from_name,
-        "message": message
+        "message": message,
+        "message_format": "text"
     }
     return requests.post(url, data)
     

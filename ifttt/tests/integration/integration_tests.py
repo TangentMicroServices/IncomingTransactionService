@@ -26,7 +26,7 @@ class TestHipchatIntegration(TestCase):
         for req in IncomingRequest.objects.all(): req.delete()
 
     def test_post_to_hipchat(self):     
-        response = hipchat_speak("Testing 1, 2, 3", "Test Robot")
+        response = hipchat_speak("(successful) Testing 1, 2, 3", "Test Robot")
         assert response.status_code == 200
 
 class TestUserServiceIntegration(TestCase):
