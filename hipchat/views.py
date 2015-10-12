@@ -30,31 +30,32 @@ class HipchatViewSet(viewsets.ViewSet):
             raise e
 
     def getUser(self, email):
-        try:
-            headers = {
-                'Authorization': 'Token ' + settings.TANGENT_ADMIN_TOKEN,
-                'Content-Type': 'application/json'
-            }
+        
+        headers = {
+            'Authorization': 'Token ' + settings.TANGENT_ADMIN_TOKEN,
+            'Content-Type': 'application/json'
+        }
 
-            response = requests.get( settings.USERSERVICE_BASE_URI + "/api/v1/users/", headers=headers)
+        response = requests.get( settings.USERSERVICE_BASE_URI + "/api/v1/users/", headers=headers)
 
-            print (settings.TANGENT_ADMIN_TOKEN)
-            print (settings.USERSERVICE_BASE_URI)
+        if response.status_code == requests.codes.ok:
+            # probable better to use requests.content or requests.json()
+            users = json.loads(response.text) # should only be 1.
 
-            if response.status_code == requests.codes.ok:
-                users = json.loads(response.text)
-                for each_user in users:
-                    if each_user['email'] == email:
-                        return each_user
+            try:
+                return [user for user in users if user['email'] == email][0]
+            except IndexError:
                 return None
+            
 
-        except Exception as e:
-            raise e
-
+    # TODO: 
+    # don;t require this to know what the incoming data looks like. 
+    # Rather, give it an incoming message and have it parse that.
     def getEntryFromPost(self, data):
         """
         Returns the entry details from the hipchat slash command
         """
+
 
         slash_command = str(data['item']['message']['message'])
         slash_command_split = str.split(slash_command, ' ')
