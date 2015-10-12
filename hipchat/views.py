@@ -109,7 +109,8 @@ class HipchatViewSet(viewsets.ViewSet):
                 response = requests.post( settings.HOURSSERVICE_BASE_URI +"/entry/", headers=headers, data=json.dumps(entry))
                 # print response.status_code
                 if response.status_code == requests.codes.created:
-                    message = "Entry successfully logged (rockon)"
+                    
+                    message = "(successful) Entry successfully logged"
                     hipchat_speak(message)
                     return Response(json.dumps({"color": "green","message": message,"notify": False,"message_format": "text"}), status=status.HTTP_200_OK)
                 else:
