@@ -101,29 +101,23 @@ class HipchatViewSet(viewsets.ViewSet):
             entry['day'] = datetime.datetime.now().date().strftime("%Y-%m-%d")
             entry['status'] = "Open"
 
-            try:
-                headers = {
-                    'Authorization': 'Token ' + settings.TANGENT_ADMIN_TOKEN,
-                    'Content-Type': 'application/json'
-                }
+            headers = {
+                'Authorization': 'Token ' + settings.TANGENT_ADMIN_TOKEN,
+                'Content-Type': 'application/json'
+            }
 
-                response = requests.post( settings.HOURSSERVICE_BASE_URI +"/entry/", headers=headers, data=json.dumps(entry))
-                # print response.status_code
-                if response.status_code == requests.codes.created:
-                    
-                    message = "(successful) Entry successfully logged"
-                    hipchat_speak(message)
-                    return Response(json.dumps({"color": "green","message": message,"notify": False,"message_format": "text"}), status=status.HTTP_200_OK)
-                else:
-                    message = "Entry could not be logged (sadpanda)"
-                    hipchat_speak(message)
-                    return Response(json.dumps({"color": "red","message": message,"notify": False,"message_format": "text"}), status=status.HTTP_400_BAD_REQUEST)
+            response = requests.post( settings.HOURSSERVICE_BASE_URI +"/entry/", headers=headers, data=json.dumps(entry))
+            # print response.status_code
+            if response.status_code == requests.codes.created:
+                
+                message = "(successful) Entry successfully logged"
+                hipchat_speak(message)
+                return Response(json.dumps({"color": "green","message": message,"notify": False,"message_format": "text"}), status=status.HTTP_200_OK)
+            else:
+                message = "Entry could not be logged (sadpanda)"
+                hipchat_speak(message)
+                return Response(json.dumps({"color": "red","message": message,"notify": False,"message_format": "text"}), status=status.HTTP_400_BAD_REQUEST)
 
-            except requests.HTTPError as e:
-                # print ('HTTP ERROR %s occured' % e.code)
-                raise e
-
-            except Exception as e:
-                raise e
+            
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

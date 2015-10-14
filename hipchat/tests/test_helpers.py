@@ -84,16 +84,15 @@ class TestHelpers(TestCase):
 
 	"""
 	Refactored versions:
-	"""
-	@unittest.skip("Not yet implemented")
+	"""	
 	def test_parse_hipchat_message(self):
 
 		incoming_message = "/hours 23:2 10 Did some stuff"
 		response = parse_hipchat_message(incoming_message)
 
-		assert response['project_id'] == 23
-		assert response['project_task_id'] == 2
-		assert response['hours'] == 10
+		assert response['project_id'] == '23'
+		assert response['project_task_id'] == '2'
+		assert response['hours'] == '10'
 		assert response['comments'] == "Did some stuff"
 		
 
