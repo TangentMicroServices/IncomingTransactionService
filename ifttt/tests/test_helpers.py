@@ -1,5 +1,5 @@
 from django.test import TestCase
-from ifttt.helpers import IfThisThenThatHelpers, get_hipchat_message, quick_validate
+from ifttt.helpers import IfThisThenThatHelpers, get_hipchat_message, get_hipchat_place_message, quick_validate
 import responses, json
 from mock import patch
 
@@ -39,8 +39,24 @@ class HipchatIntegrationTestCase(TestCase):
         project = {"title": "ACME"}
 
         message = get_hipchat_message(user, project, "exited")
-        
+
         self.assertEqual(message, 'Joe has left ACME')
+
+    def test_get_hipchat_message_place_exited(self):
+        user = {"first_name": "Joe"}
+        place = "Benoni Gym"
+
+        message = get_hipchat_place_message(user, place, "entered")
+
+        self.assertEqual(message, 'Joe has arrived at Benoni Gym')
+
+    def test_get_hipchat_message_place_exited(self):
+        user = {"first_name": "Joe"}
+        place = "Benoni Gym"
+
+        message = get_hipchat_place_message(user, place, "exited")
+
+        self.assertEqual(message, 'Joe has left Benoni Gym')
 
 class TestIFTTTHelpers(TestCase):
 
@@ -53,8 +69,8 @@ class TestIFTTTHelpers(TestCase):
     @patch('ifttt.helpers.hipchat_speak')
     @patch('ifttt.helpers.get_project')
     @patch('ifttt.helpers.get_current_user')
-    def test_post_to_hipchat(self, 
-            mock_get_current_user, 
+    def test_post_to_hipchat(self,
+            mock_get_current_user,
             mock_get_project,
             mock_hipchat_speak):
 
@@ -63,7 +79,7 @@ class TestIFTTTHelpers(TestCase):
 
         mock_get_current_user.return_value = mock_user_response
         mock_get_project.return_value = mock_project_response
-        
+
         payload = {
             'auth_token': '123',
             'user': 1,
@@ -76,7 +92,31 @@ class TestIFTTTHelpers(TestCase):
 
         # assertions
         mock_hipchat_speak.assert_called_with('Joe has arrived at ACME')
-        
+
+    @patch('ifttt.helpers.hipchat_speak')
+    @patch('ifttt.helpers.get_current_user')
+    def test_post_place_to_hipchat(self,
+            mock_get_current_user,
+            mock_hipchat_speak):
+
+        mock_user_response = MockResponse({"first_name": "Joe"})
+
+        mock_get_current_user.return_value = mock_user_response
+
+        payload = {
+            'auth_token': '123',
+            'user': 1,
+            'project_id': 2,
+            'entered_or_exited': 'entered',
+            'place': 'Benoni Gym'
+        }
+
+        # item under test:
+        IfThisThenThatHelpers.post_to_hipchat(payload)
+
+        # assertions
+        mock_hipchat_speak.assert_called_with('Joe has arrived at Benoni Gym')
+
     def test_post_to_hipchat_no_user_found(self):
         '''
         TBD

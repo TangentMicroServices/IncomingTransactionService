@@ -13,7 +13,7 @@ def quick_validate(required_fields, payload):
 
 def hipchat_speak(message, from_name="Mr Robot"):
     '''
-    Utility to make it easy to post to hipchat 
+    Utility to make it easy to post to hipchat
     Includes this app's context
     '''
 
@@ -23,7 +23,7 @@ def hipchat_speak(message, from_name="Mr Robot"):
     '''
     token = settings.HIPCHAT_AUTH_TOKEN
     room = settings.HIPCHAT_ROOM_ID
-    
+
     url ='https://api.hipchat.com/v1/rooms/message?format=json&auth_token={}' . format (token)
     data = {
         "room_id": room,
@@ -31,7 +31,7 @@ def hipchat_speak(message, from_name="Mr Robot"):
         "message": message
     }
     return requests.post(url, data)
-    
+
 def get_current_user(token, user_id):
     service = UserService(token=token, tld=settings.MICROSERVICE_TLD)
     return service.get(resource='user', resource_id=user_id)
@@ -55,7 +55,19 @@ def get_hipchat_message(user, project, entered_or_exited):
 
     return message_templates.get(entered_or_exited).format(user_name, project_name)
 
+def get_hipchat_place_message(user, place, entered_or_exited):
 
+    assert entered_or_exited in ['entered', 'exited'], \
+    "entered_or_exited must be either 'entered', or 'exited"
+
+    user_name = user.get("first_name", None)
+
+    message_templates = {
+        "entered": "{} has arrived at {}",
+        "exited": "{} has left {}"
+    }
+
+    return message_templates.get(entered_or_exited).format(user_name, place)
 
 class IfThisThenThatHelpers:
 
@@ -87,24 +99,29 @@ class IfThisThenThatHelpers:
 
         return service.create(resource="entry", data=data)
 
-    @staticmethod 
+    @staticmethod
     def post_to_hipchat(payload):
         """
         Given an IFTTT payload, correctly post messages to HipChat
         """
-        
+
         required_fields = ['user', 'project_id', 'entered_or_exited', 'auth_token']
-        quick_validate(required_fields, payload)        
+        quick_validate(required_fields, payload)
 
         token = payload.get('auth_token')
         user_id = payload.get('user')
         project_id = payload.get('project_id')
         entered_or_exited = payload.get('entered_or_exited')
 
-        user = get_current_user(token, user_id).json() 
+        user = get_current_user(token, user_id).json()
         project = get_project(token, project_id).json()
 
-        message = get_hipchat_message(user, project, entered_or_exited)
+        #Check if place is in the payload
+        if 'place' in payload:
+            place = payload.get('place')
+            message = get_hipchat_place_message(user, place, entered_or_exited)
+        else:
+            message = get_hipchat_message(user, project, entered_or_exited)
 
         hipchat_speak(message)
 
@@ -117,7 +134,7 @@ class IfThisThenThatHelpers:
         exited_date = exit_payload["time"]
 
         return IfThisThenThatHelpers.calculate_hours_diff(entered_date, exited_date)
-        
+
 
     #takes time strings, not objects
     @staticmethod
