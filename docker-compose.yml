@@ -1,0 +1,13 @@
+db:
+  image: postgres
+web:
+  build: .
+  command: gunicorn incomingtransactionservice.wsgi:application -b :8000 --reload
+  volumes:
+    - .:/code
+  ports:
+    - "8000:8000"
+  links:
+    - db
+
+

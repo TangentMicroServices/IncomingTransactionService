@@ -1,7 +1,8 @@
-django==1.8.4
+django==1.9
+psycopg2
 gunicorn
 requests
-djangorestframework==3.2
+djangorestframework==3.3
 django-rest-swagger
 django-filter
 
@@ -15,3 +16,9 @@ ipdb
 ipython
 
 microclient
+
+django_nose
+django-cors-headers
+pinocchio
+nose-html-reporting
+nose-exclude

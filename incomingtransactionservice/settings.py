@@ -29,7 +29,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -37,16 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    #3rd party:
-    'rest_framework',
-    'django_jenkins',
-
-    # custom:
-    'webhook',
-    'mandrill',
-    'ifttt',
-    'hipchat',
-)
+]
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -115,3 +106,6 @@ try:
     from local_settings import *
 except:
     print("No Local Settings Defined")
+
+if os.environ.get('WITH_DOCKER', False) == 'True': from incomingtransactionservice.docker_settings import *
+

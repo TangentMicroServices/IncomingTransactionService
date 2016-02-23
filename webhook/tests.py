@@ -17,7 +17,7 @@ class WebHookTests(TestCase):
 		response = c.get('/webhook/')
 
 		assert response.status_code == 200, 'Expect 200 OK'
-		assert response.data['count'] == 2, 'Expect 2 results back'
+		assert len(response.json()) == 2, 'Expect 2 results back'
 
 	def test_create_request(self):
 
