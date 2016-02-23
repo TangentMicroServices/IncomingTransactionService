@@ -6,8 +6,6 @@ web:
   volumes:
     - .:/code
   ports:
-    - "8000:8000"
+    - "${APP_PORT}:8000"
   links:
     - db
-
-
