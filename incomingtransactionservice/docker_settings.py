@@ -85,6 +85,9 @@ X-Consumer-Username
     },
 }
 
+STATIC_URL = '/static/'
+STATIC_ROOT = '/code/static/'
+
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 NOSE_ARGS = ['--with-spec', '--spec-color', '-s',
              '--with-coverage', '--cover-html',
