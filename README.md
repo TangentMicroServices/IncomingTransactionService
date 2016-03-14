@@ -1,3 +1,5 @@
+> **Note:** This may be deprecated in favor of using logstash
+
 # IncomingTransactionService
 
 A service for fielding incoming webhooks
